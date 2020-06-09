@@ -414,6 +414,8 @@ class XiaomiGenericDevice(FanEntity):
         if result:
             self._state = False
             self._skip_update = True
+            self._speed = SPEED_OFF
+            self._state_attrs[ATTR_SPEED] = SPEED_OFF
 
     async def async_set_buzzer_on(self):
         """Turn the buzzer on."""
@@ -502,7 +504,10 @@ class XiaomiFan(XiaomiGenericDevice):
             self._natural_mode = state.natural_speed != 0
             self._state = state.is_on
 
-            if self._natural_mode:
+            if not self._state:
+                self._speed = SPEED_OFF
+                self._state_attrs[ATTR_SPEED] = SPEED_OFF
+            elif self._natural_mode:
                 for level, range in FAN_SPEED_LIST.items():
                     if state.natural_speed in range:
                         self._speed = level
