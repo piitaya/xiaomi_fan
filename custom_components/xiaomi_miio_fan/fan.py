@@ -17,6 +17,9 @@ from homeassistant.components.fan import (
     SUPPORT_SET_SPEED,
     DOMAIN,
     SPEED_OFF,
+    SPEED_LOW,
+    SPEED_MEDIUM,
+    SPEED_HIGH,
     SUPPORT_OSCILLATE,
     SUPPORT_DIRECTION,
     ATTR_SPEED,
@@ -121,33 +124,30 @@ AVAILABLE_ATTRIBUTES_FAN_P5 = {
     ATTR_CHILD_LOCK: "child_lock",
 }
 
-FAN_SPEED_LEVEL1 = "Level 1"
-FAN_SPEED_LEVEL2 = "Level 2"
-FAN_SPEED_LEVEL3 = "Level 3"
-FAN_SPEED_LEVEL4 = "Level 4"
+SPEED_MAX = "max"
 
 FAN_SPEED_LIST = {
     SPEED_OFF: range(0, 1),
-    FAN_SPEED_LEVEL1: range(1, 26),
-    FAN_SPEED_LEVEL2: range(26, 51),
-    FAN_SPEED_LEVEL3: range(51, 76),
-    FAN_SPEED_LEVEL4: range(76, 101),
+    SPEED_LOW: range(1, 26),
+    SPEED_MEDIUM: range(26, 51),
+    SPEED_HIGH: range(51, 76),
+    SPEED_MAX: range(76, 101),
 }
 
 FAN_SPEED_VALUES = {
     SPEED_OFF: 0,
-    FAN_SPEED_LEVEL1: 1,
-    FAN_SPEED_LEVEL2: 35,
-    FAN_SPEED_LEVEL3: 74,
-    FAN_SPEED_LEVEL4: 100,
+    SPEED_LOW: 1,
+    SPEED_MEDIUM: 35,
+    SPEED_HIGH: 74,
+    SPEED_MAX: 100,
 }
 
 FAN_SPEED_VALUES_P5 = {
     SPEED_OFF: 0,
-    FAN_SPEED_LEVEL1: 1,
-    FAN_SPEED_LEVEL2: 35,
-    FAN_SPEED_LEVEL3: 70,
-    FAN_SPEED_LEVEL4: 100,
+    SPEED_LOW: 1,
+    SPEED_MEDIUM: 35,
+    SPEED_HIGH: 70,
+    SPEED_MAX: 100,
 }
 
 SUCCESS = ["ok"]
