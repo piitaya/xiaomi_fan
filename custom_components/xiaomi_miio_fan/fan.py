@@ -403,6 +403,9 @@ class XiaomiGenericDevice(FanEntity):
 
         if result:
             self._state = True
+            natural_speed = self._state_attrs[ATTR_NATURAL_SPEED]
+            direct_speed = self._state_attrs[ATTR_DIRECT_SPEED]
+            self.update_speed(natural_speed, direct_speed)
             self._skip_update = True
 
     async def async_turn_off(self, **kwargs) -> None:
@@ -486,6 +489,23 @@ class XiaomiFan(XiaomiGenericDevice):
         """Supported features."""
         return SUPPORT_SET_SPEED | SUPPORT_OSCILLATE | SUPPORT_DIRECTION
 
+    def update_speed(self, natural_speed, direct_speed):
+        if not self._state:
+            self._speed = SPEED_OFF
+            self._state_attrs[ATTR_SPEED] = SPEED_OFF
+        elif self._natural_mode:
+            for level, range in FAN_SPEED_LIST.items():
+                if natural_speed in range:
+                    self._speed = level
+                    self._state_attrs[ATTR_SPEED] = level
+                    break
+        else:
+            for level, range in FAN_SPEED_LIST.items():
+                if direct_speed in range:
+                    self._speed = level
+                    self._state_attrs[ATTR_SPEED] = level
+                    break
+        
     async def async_update(self):
         """Fetch state from the device."""
         from miio import DeviceException
@@ -504,21 +524,7 @@ class XiaomiFan(XiaomiGenericDevice):
             self._natural_mode = state.natural_speed != 0
             self._state = state.is_on
 
-            if not self._state:
-                self._speed = SPEED_OFF
-                self._state_attrs[ATTR_SPEED] = SPEED_OFF
-            elif self._natural_mode:
-                for level, range in FAN_SPEED_LIST.items():
-                    if state.natural_speed in range:
-                        self._speed = level
-                        self._state_attrs[ATTR_SPEED] = level
-                        break
-            else:
-                for level, range in FAN_SPEED_LIST.items():
-                    if state.direct_speed in range:
-                        self._speed = level
-                        self._state_attrs[ATTR_SPEED] = level
-                        break
+            self.update_speed(state.natural_speed, state.direct_speed)
 
             self._state_attrs.update(
                 {
